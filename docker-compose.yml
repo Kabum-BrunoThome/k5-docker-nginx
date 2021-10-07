@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  checkout:
+    container_name: 'checkout'
+    ports:
+      - '3001:3001'
+    build: './ecommerce-frontend-checkout'
+    volumes:
+      - './ecommerce-frontend-checkout:/src/app'
+
+  core:
+    container_name: 'core'
+    ports:
+      - '3000:3000'
+    build:
+      context: './ecommerce-frontend-core'
+    volumes:
+      - './ecommerce-frontend-core:/src/app'
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - checkout
+      - core
